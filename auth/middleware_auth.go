@@ -1,11 +1,14 @@
 package auth
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strings"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"github.com/lffranca/suflex-api/constant"
 )
 
 // MiddlewareAuth MiddlewareAuth
@@ -27,9 +30,21 @@ func (item *Auth) MiddlewareAuth() gin.HandlerFunc {
 			return
 		}
 
-		token := resultBearer[1]
+		tokenString := resultBearer[1]
 
-		log.Println("VERIFY TOKEN HERE", token)
+		token, errVerifyToken := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			}
+
+			return constant.HMACSampleSecret, nil
+		})
+		if errVerifyToken != nil {
+			log.Println(errVerifyToken)
+			c.JSON(http.StatusForbidden, nil)
+			c.Abort()
+			return
+		}
 
 		c.Next()
 	}
