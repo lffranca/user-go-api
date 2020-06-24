@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/lffranca/suflex-api/auth"
+	"github.com/lffranca/suflex-api/login"
 	"github.com/lffranca/suflex-api/user"
 )
 
@@ -15,6 +16,8 @@ func Init(router *gin.RouterGroup, db *sql.DB) {
 	if errAuth != nil {
 		log.Fatalln(errAuth)
 	}
+
+	login.Router(router.Group("login"), db)
 
 	routerPrivate := router.Group("private")
 	routerPrivate.Use(auth.MiddlewareAuth())
