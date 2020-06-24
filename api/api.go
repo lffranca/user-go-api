@@ -19,6 +19,6 @@ func Init(router *gin.RouterGroup, db *sql.DB) {
 	routerPrivate := router.Group("private")
 	routerPrivate.Use(auth.MiddlewareAuth())
 	{
-		user.RouterPrivate(routerPrivate, db)
+		user.RouterPrivate(routerPrivate.Group("user"), db)
 	}
 }

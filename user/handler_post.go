@@ -9,6 +9,13 @@ import (
 
 func handlerPOST(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.JSON(http.StatusOK, nil)
+		var body UserRequest
+		if err := c.ShouldBindJSON(&body); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "Parametros invalidos"})
+			c.Abort()
+			return
+		}
+
+		c.JSON(http.StatusOK, body)
 	}
 }

@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/lffranca/suflex-api/api"
@@ -18,7 +19,7 @@ func main() {
 
 	db, errDB := database.GetDBMeta()
 	if errDB != nil {
-		return nil, errDB
+		log.Fatalln(errDB)
 	}
 
 	router := gin.Default()
