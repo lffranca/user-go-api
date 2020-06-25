@@ -11,7 +11,6 @@ import (
 
 func handlerGET(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-
 		items, errItems := user_model.ModelGetAll(db)
 		if errItems != nil {
 			log.Println(errItems)
